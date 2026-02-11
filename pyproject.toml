@@ -1,0 +1,41 @@
+[project]
+name = "fastapi-quickstart"
+version = "0.1.0"
+description = "Proyecto de fastapi automatizado"
+authors = [
+    { name="Benjamin.P" }
+]
+requires-python = ">=3.10" 
+
+dependencies = [
+    "pytest",
+    "pytest-cov"
+]
+
+[tool.pytest.ini_options]
+# Carpeta donde buscar tests
+testpaths = ["tests"]
+#pythonpath = ["app"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
+# Opciones por defecto al correr pytest
+# -v                    ->aumenta el nivel de detales en el output
+# --maxfail=3           -> maximo 3 fallos
+# --disable-warnings    -> deshabilita advertencias
+
+addopts = "-v --maxfail=100 --disable-warnings ---cov=src --cov-report=xml --cov-report=html --cov-report=json"
+
+# Marcadores personalizados (ejemplo)
+markers = [
+    "slow: tests que toman más tiempo",
+    "error: tests que validan errores esperados",
+    "integration: marcar tests como test de integracion",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
