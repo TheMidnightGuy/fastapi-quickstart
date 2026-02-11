@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+#Obtenemos resultados en http://127.0.0.1:8000/
 
+from fastapi import FastAPI # pyright: ignore
 app = FastAPI()
 
 

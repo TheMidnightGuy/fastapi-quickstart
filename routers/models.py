@@ -1,6 +1,9 @@
+#Obtenemos resultados en http://127.0.0.1:8000/models/nombre_del_modelo
+#modelos disponibles: alexnet,lenet
+
 from enum import Enum
 
-from fastapi import FastAPI
+from fastapi import FastAPI #type: ignore
 
 
 class ModelName(str, Enum):

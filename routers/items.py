@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+#Obtenemos resultados en http://127.0.0.1:8000/items/3
+
+from fastapi import FastAPI # type: ignore
 
 app = FastAPI()
 

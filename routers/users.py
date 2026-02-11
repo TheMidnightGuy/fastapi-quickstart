@@ -1,6 +1,6 @@
 #Obtenemos resultados en http://127.0.0.1:8000/users/me
 
-from fastapi import FastAPI
+from fastapi import FastAPI # type: ignore
 
 app = FastAPI()
 
