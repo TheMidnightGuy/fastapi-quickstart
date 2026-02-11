@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Instalar dependencias
-        run: pip install . 
+        run: pip install fastapi pytest uvicorn 
       - name: Test con pytest
         run: pytest -cov
 
