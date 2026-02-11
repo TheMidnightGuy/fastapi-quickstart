@@ -1,5 +1,6 @@
-#Obtenemos resultados en http://127.0.0.1:8000/models/nombre_del_modelo
-#modelos disponibles: alexnet,lenet
+#Fastapi dev app/routers/models.py
+#Obtenemos resultados en http://127.0.0.1:8000/models/names
+#modelos disponibles: alexnet, lenet, resnet
 
 from enum import Enum
 
@@ -14,6 +15,9 @@ class ModelName(str, Enum):
 
 app = FastAPI()
 
+@app.get("/models/names")
+async def read_models_names():
+    return{"Models names available: alexnet, resnet, lenet"}
 
 @app.get("/models/{model_name}")
 async def get_model(model_name: ModelName):

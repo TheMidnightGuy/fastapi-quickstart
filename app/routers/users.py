@@ -1,15 +1,23 @@
+#Modificar comentarios según cambios y ejecución.!!!
+
+#Fastapi dev app/routers/users.py
 #Obtenemos resultados en http://127.0.0.1:8000/users/me
 
-from fastapi import FastAPI # type: ignore
+from fastapi import APIRouter #type: ignore
 
-app = FastAPI()
+router = APIRouter()
 
 
-@app.get("/users/me")
+@router.get("/users/", tags=["users"])
+async def read_users():
+    return [{"username": "Rick"}, {"username": "Morty"}]
+
+
+@router.get("/users/me", tags=["users"])
 async def read_user_me():
-    return {"user_id": "the current user"}
+    return {"username": "fakecurrentuser"}
 
 
-@app.get("/users/{user_id}")
-async def read_user(user_id: str):
-    return {"user_id": user_id}
+@router.get("/users/{username}", tags=["users"])
+async def read_user(username: str):
+    return {"username": username}
