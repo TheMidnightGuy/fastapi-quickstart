@@ -22,19 +22,16 @@ jobs:
       - name: Instalar dependencias
         run: pip install . 
       - name: Test con pytest
-        run: pytest --cov=src --cov-report=xml --cov-report=html --cov-report=json
-      - name: guardar reportes
-        uses: actions/upload-artifact@v4
-        with:
-          name: reportes-cobertura
-          path: reports/coverage/
+        run: pytest -cov
+
 
   docker-build:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        run: docker build -t my_fastapi_app:${{github.sha}}
+      - name: Build image
+        run: docker build -t my_fastapi_app .
 
   fastapi:
     needs: docker-build
