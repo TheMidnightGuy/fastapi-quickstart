@@ -24,7 +24,7 @@ router = APIRouter(
 
 items_from_db = {"Agua": {"name": "Agua Mineral"}, "Cereal": {"name":"Cereal"}}
 
-@router.get("/")
+@router.get("/items")
 async def read_items():
     return items_from_db
 
