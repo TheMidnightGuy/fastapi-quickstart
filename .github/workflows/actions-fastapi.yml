@@ -46,7 +46,7 @@ jobs:
       run: docker build -t ${{env.REGISTRY}}/${{env.IMAGE_NAME}}/my_fastapi_app .
 
     - name: Push image
-      run: docker push -t ${{env.REGISTRY}}/${{env.IMAGE_NAME}}/my_fastapi_app .
+      run: docker push ${{env.REGISTRY}}/${{env.IMAGE_NAME}}/my_fastapi_app .
          
 
 #FastAPI pendiente despliegue en servidor.
