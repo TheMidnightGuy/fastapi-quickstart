@@ -27,7 +27,7 @@ jobs:
       with:
         python-version: "3.12.0"
         cache: 'poetry'
-    - run: pip install -r requirements.txt
+        cache-dependency-path: /poetry.lock
 #Poetry
     - name: Instalar poetry
       run: pip install poetry
