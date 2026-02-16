@@ -27,7 +27,7 @@ jobs:
       with:
         python-version: "3.12.0"
         cache: 'poetry'
-        cache-dependency-path: /poetry.lock
+        cache-dependency-path: /home/runner/work/fastapi-quickstart/fastapi-quickstart/poetry.lock
 #Poetry
     - name: Instalar poetry
       run: pip install poetry
