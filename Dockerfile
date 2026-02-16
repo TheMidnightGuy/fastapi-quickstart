@@ -19,7 +19,7 @@ RUN pip download -r requirements.txt -d /wheelhouse
 FROM python:3.12-slim
 WORKDIR /app
 COPY --from=builder /wheelhouse /wheelhouse
-COPY --from=builder requirements.txt .
+COPY --from=builder /app/requirements.txt .
 RUN pip install --no-index --find-links=/wheelhouse -r requirements.txt
 COPY app/ ./app
 COPY tests/ ./tests
