@@ -5,13 +5,22 @@ description = "Proyecto de fastapi automatizado"
 authors = [
     { name="Benjamin.P" }
 ]
-requires-python = ">=3.10" 
 
-dependencies = [
-    "pytest",
-    "pytest-cov"
-]
+#Poetry config
+[tool.poetry]
+name = "proyecto_dependencias_intactas"
+version = "0.1.0"
+description = "Ejemplo con Docker y Poetry"
+packages = [{include = "app"}]
 
+[tool.poetry.dependencies]
+python = "3.12"
+pytest = "9.0.2"
+fastapi = "0.128.7"
+uvicorn = "0.40.0"
+
+
+#PyTest config
 [tool.pytest.ini_options]
 # Carpeta donde buscar tests
 testpaths = ["tests"]
@@ -35,7 +44,9 @@ markers = [
     "integration: marcar tests como test de integracion",
 ]
 
+#System config
+#Usamos poetry
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 

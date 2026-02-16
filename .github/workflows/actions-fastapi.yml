@@ -3,35 +3,67 @@
 
 name: FastApi CI/CD
 run-name: ${{github.actor}} esta automatizando procesos!
-on: [push, pull_request]
+on: [push]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository}}
+
 jobs:
   python:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Chequeo de código
+      uses: actions/checkout@v4
     - name: Configurar Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.12"
 
-  test:
+  poetry:
     needs: python
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Instalar dependencias
-        run: pip install -r requirements.txt
+        - name: Chequeo de código
+          uses: actions/checkout@v4
+        - name: Instalar poetry
+          run: pip install poetry
+        - name: Instalar dependencias
+          run: poetry install --no-interaction --no-ansi
+
+  pytest:
+    needs: poetry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chequeo de código
+        uses: actions/checkout@v4
       - name: Test con pytest
-        run: pytest -cov
+        run: poetry run pytest --cov=app
 
 
   docker-build:
-    needs: test
+    needs: pytest
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Chequeo de código
+        uses: actions/checkout@v4
+      - name: LogIn to GHCR (GitHub Container Registry)
+        uses: docker/login-action@v3
+        with:
+            registry: ${{ env.REGISTRY}}
+            username: ${{ github.actor}}
+            password: ${{ secrets.GITHUB_TOKEN}}
+            
       - name: Build image
-        run: docker build -t my_fastapi_app .
+        run: docker build -t ${{ env.REGISTRY}}/${{ github.repository}}/my_fastapi_app .
+      - name: Push image
+        run: docker push -t ${{env.REGISTRY}}/${{ github.repository}}/my_fastapi_app .
+        
 
   fastapi:
     needs: docker-build
@@ -39,5 +71,4 @@ jobs:
     steps:
     - name: chequeo del codigo
       uses: actions/checkout@v4
-        
-      #continuar con despliegue web via GitHub Actions con SSH
+        #continuar con despliegue web via GitHub Actions con SSH
