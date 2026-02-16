@@ -19,6 +19,8 @@ pytest = "9.0.2"
 fastapi = "0.128.7"
 uvicorn = "0.40.0"
 
+[tool.poetry.scripts]
+pytest-script = "pytest --cov=app"
 
 #PyTest config
 [tool.pytest.ini_options]

@@ -34,7 +34,7 @@ jobs:
       - name: Chequeo de código
         uses: actions/checkout@v4
       - name: Test con pytest
-        run: poetry run pytest --cov=app
+        run: poetry run pytest-script
 
 
   docker-build:
