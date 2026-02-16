@@ -65,7 +65,7 @@ jobs:
         run: docker push -t ${{env.REGISTRY}}/${{ github.repository}}/my_fastapi_app .
         
 
-        
+         
 
   fastapi:
     needs: docker-build
