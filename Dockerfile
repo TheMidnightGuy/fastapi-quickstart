@@ -3,7 +3,7 @@
 # Exportamos dependencias a requirements.txt
 # Descargamos dependencias en wheelhouse
 
-FROM python:3.12-slim AS builder
+FROM python:3.12.0-slim AS builder
 WORKDIR /app
 RUN pip install poetry poetry-plugin-export
 COPY pyproject.toml poetry.lock ./
@@ -16,7 +16,7 @@ RUN pip download -r requirements.txt -d /wheelhouse
 # Copiamos el código fuente del proyecto
 # Exponer puerto para FastAPI
 # Comando por defecto: arrancar FastAPI con uvicorn
-FROM python:3.12-slim
+FROM python:3.12.0-slim
 WORKDIR /app
 COPY --from=builder /wheelhouse /wheelhouse
 COPY --from=builder /app/requirements.txt .
