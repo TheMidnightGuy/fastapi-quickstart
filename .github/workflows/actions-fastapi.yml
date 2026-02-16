@@ -50,3 +50,13 @@ jobs:
          
 
 #FastAPI pendiente despliegue en servidor.
+
+#Consideraciones tras correcta ejecución de workflow.
+# 1. Al reducir cantidad de jobs a solo uno, se mantienen las versiones instaladas de 
+#    python, poetry, pytest y se evita un conflicto de versiones durante la ejecución
+#    del workflow mismo.
+
+# 2. Definir en minusculas el repositorio de GHCR al definir donde se quedara la imagen.
+#    EJ.- themidnightguy/fastapi-quickstart. Evitar mayusculas.
+
+# 3. Cuidado con la sintaxis al crear la imagen Docker y realizar push.
