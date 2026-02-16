@@ -39,13 +39,14 @@ jobs:
       uses: docker/login-action@v3
       with:
             registry: ${{ env.REGISTRY}}
-            username: ${{ github.actor}}
+            username: themidnightguy
             password: ${{ secrets.GITHUB_TOKEN}}
 
     - name: Build image
-      run: docker build -t ${{ env.REGISTRY}}/${{ github.repository}}/my_fastapi_app .
+      run: docker build -t ${{env.REGISTRY}}/${{env.IMAGE_NAME}}/my_fastapi_app .
+
     - name: Push image
-      run: docker push -t ${{env.REGISTRY}}/${{ github.repository}}/my_fastapi_app .
+      run: docker push -t ${{env.REGISTRY}}/${{env.IMAGE_NAME}}/my_fastapi_app .
          
 
 #FastAPI pendiente despliegue en servidor.
