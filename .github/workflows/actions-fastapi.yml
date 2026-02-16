@@ -20,13 +20,13 @@ jobs:
 
     steps:
     - name: Chequeo de código
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 #Python
     - name: Configurar Python
       uses: actions/setup-python@v6
       with:
         python-version: "3.12.0"
-        cache: 'pip'
+        cache: 'poetry'
     - run: pip install -r requirements.txt
 #Poetry
     - name: Instalar poetry
