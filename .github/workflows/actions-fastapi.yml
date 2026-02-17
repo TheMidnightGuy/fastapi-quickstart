@@ -17,10 +17,18 @@ jobs:
       packages: write
       attestations: write
       id-token: write
-
+#Check
     steps:
     - name: Chequeo de código
       uses: actions/checkout@v4
+#Cache #desarrollar código de integracion de actions/cachev4
+    - name: Cache de runner en Poetry (Para posterior instalacion de dependencias)
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pypoetry
+        key: ${{runner.os}}-poetry-${{hashFiles('**/poetry.lock')}}
+        restore-keys: |
+          ${{runner.os}}-poetry    
 #Python
     - name: Configurar Python
       uses: actions/setup-python@v4
@@ -34,14 +42,14 @@ jobs:
 #Pytest
     - name: Test con pytest
       run: poetry run pytest --cov=app
-#Docker
+#GHCR
     - name: LogIn to GHCR (GitHub Container Registry)
       uses: docker/login-action@v3
       with:
             registry: ${{ env.REGISTRY}}
             username: ${{ github.actor}}
             password: ${{ secrets.GITHUB_TOKEN}}
-
+#Docker
     - name: Build image
       run: docker build -t ${{env.REGISTRY}}/${{env.IMAGE_NAME}}/my_fastapi_app .
 
