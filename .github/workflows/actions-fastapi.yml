@@ -71,24 +71,27 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{secrets.SSH_HOST}}  > ~/.ssh/known_hosts
 
-        # 0. Para utilizar el bash dentro de la maquina linux ocupamos EOF(End Of File)
-        # 1. Login en el registro desde el servidor de Oracle
-        # 2. Bajamos la imagen más reciente
-        # 3. Detener y borrar el contenedor viejo (si existe)
-        # 4. Correr el nuevo contenedor
-      - name: Deploy en OCI (Oracle Cloud Infrastructure)
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
-            docker stop fastapi-app || true
-            docker rm fastapi-app || true
-            docker run -d \
+      - name: Conexión a instancia OCI (Oracle Cloud Infrastructure)
+        run: ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 
+
+      - name: Login Docker
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      
+      - name: Obtener imagen Docker
+        run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
+
+      - name: Detener contenedor anterior (Si existiera)
+        run: docker stop fastapi-app || true
+
+      - name: Remover contenedor anterior (Si existiera)
+        run: docker rm fastapi-app || true
+
+      - name: Iniciar contenedor
+        run: docker run -d \
               --name fastapi-app \
               --restart always \
               -p 80:8000 \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
-          EOF 
+
 
 #ref step "Instalar SSH Keys": https://stackoverflow.com/questions/60477061/github-actions-how-to-deploy-to-remote-server-using-ssh/70447517#70447517
