@@ -63,56 +63,41 @@ jobs:
   Deploy_Docker_image:
     needs: python-poetry
     runs-on: ubuntu-latest
-
     steps:
-      - name: Instalar SSH Keys
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{secrets.SSH_HOST}}  > ~/.ssh/known_hosts
+      - name: Uso de SSH-ACTION
+        uses: appleboy/ssh-action@v1
+        #Se definen los parametros de autentificación
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USER}}
+          key: ${{secrets.SHH_PRIVATE_KEY}}
+          #¿Que se hara dentro del script?
+          # Los comandos ejecutados dentro del script seran via ssh en orden secuencial.
+          # Se inicia sesión Docker en ghcr.io 
+          # Se hace pull de la imagen
+          # Verifica si existen imagenes o contenedores
+          # Se detiene y remueve el contendor (De existir)
+          # Iniciamos un nuevo contenedor
+          # Validamos que se ejecute correctamente con 'curl'
+          script: |
+            echo "Comandos en OCI"
+            
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{env.REGISTRY}} -u ${{ github.actor }} --password-stdin
 
-      - name: Conexión a instancia OCI (Oracle Cloud Infrastructure)
-        run: ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
 
-      - name: Login Docker
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      
-      - name: Obtener imagen Docker
-        run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
+            docker images -a
+            docker ps -a
 
-      - name: Verificar imagenes Docker
-        run: docker images -a
+            docker stop fastapi-app || true
+            docker rm fastapi-app || true
+            docker run -d --name fastapi-app --restart always -p 80:8000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
 
-      - name: Verificar contenedores Docker
-        run: docker ps -a
+            echo "Esperando que FastAPI inicie..."
+            sleep 10
 
-      - name: Detener contenedor anterior (Si existiera)
-        run: docker stop fastapi-app || true
+            curl -I http://127.0.0.1:80/docs
 
-      - name: Remover contenedor anterior (Si existiera)
-        run: docker rm fastapi-app || true
-
-      - name: Iniciar contenedor
-        run: docker run -d --name fastapi-app --restart always -p 80:8000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
-
-      - name: Verificar contenedores Docker nuevamente
-        run: docker ps -a
-
-      - name: Hostname (OCI - VCN)
-        run: hostname -I
-
-      - name: Verificar logs de contenedor
-        run: docker logs fastapi-app || echo "no hay logs disponibles"
-
-      - name: docker inspect
-        run: docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' fastapi-app
-
-      - name: Timeout
-        run: echo "Esperando que FastAPI inicie..."
-             sleep 10
-
-      - name: check public page
-        run: curl ${{secrets.SSH_HOST}}/docs
 
 
 #ref step "Instalar SSH Keys": https://stackoverflow.com/questions/60477061/github-actions-how-to-deploy-to-remote-server-using-ssh/70447517#70447517
