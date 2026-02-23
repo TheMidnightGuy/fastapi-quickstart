@@ -98,14 +98,21 @@ jobs:
       - name: Verificar contenedores Docker nuevamente
         run: docker ps -a
 
-      - name: Verificar logs de contenedor
-        run: docker logs fastapi-app
-
       - name: Hostname (OCI - VCN)
         run: hostname -I
 
+      - name: Verificar logs de contenedor
+        run: docker logs fastapi-app || echo "no hay logs disponibles"
+
+      - name: docker inspect
+        run: docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' fastapi-app
+
+      - name: Timeout
+        run: echo "Esperando que FastAPI inicie..."
+             sleep 10
+
       - name: check docs page
-        run: curl -v http://localhost:80/docs
+        run: curl -v4 http://localhost:80/docs
 
 
 #ref step "Instalar SSH Keys": https://stackoverflow.com/questions/60477061/github-actions-how-to-deploy-to-remote-server-using-ssh/70447517#70447517
