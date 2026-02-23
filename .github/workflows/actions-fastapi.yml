@@ -70,7 +70,7 @@ jobs:
         with:
           host: ${{secrets.SSH_HOST}}
           username: ${{secrets.SSH_USER}}
-          key: ${{secrets.SHH_PRIVATE_KEY}}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
           #¿Que se hara dentro del script?
           # Los comandos ejecutados dentro del script seran via ssh en orden secuencial.
           # Se inicia sesión Docker en ghcr.io 
@@ -97,7 +97,3 @@ jobs:
             sleep 10
 
             curl -I http://127.0.0.1:80/docs
-
-
-
-#ref step "Instalar SSH Keys": https://stackoverflow.com/questions/60477061/github-actions-how-to-deploy-to-remote-server-using-ssh/70447517#70447517
