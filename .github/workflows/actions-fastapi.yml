@@ -80,6 +80,12 @@ jobs:
       - name: Obtener imagen Docker
         run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
 
+      - name: Verificar imagenes Docker
+        run: docker images -a
+
+      - name: Verificar contedores Docker
+        run: docker ps -a
+
       - name: Detener contenedor anterior (Si existiera)
         run: docker stop fastapi-app || true
 
@@ -87,11 +93,7 @@ jobs:
         run: docker rm fastapi-app || true
 
       - name: Iniciar contenedor
-        run: docker run -d \
-              --name fastapi-app \
-              --restart always \
-              -p 80:8000 \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
+        run: docker run -d --name fastapi-app --restart always -p 80:8000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
 
 
 #ref step "Instalar SSH Keys": https://stackoverflow.com/questions/60477061/github-actions-how-to-deploy-to-remote-server-using-ssh/70447517#70447517
