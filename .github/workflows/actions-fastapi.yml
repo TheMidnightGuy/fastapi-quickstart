@@ -111,8 +111,8 @@ jobs:
         run: echo "Esperando que FastAPI inicie..."
              sleep 10
 
-      - name: check docs page
-        run: curl -v4 http://localhost:80/docs
+      - name: check public page
+        run: curl ${{secrets.SSH_HOST}}/docs
 
 
 #ref step "Instalar SSH Keys": https://stackoverflow.com/questions/60477061/github-actions-how-to-deploy-to-remote-server-using-ssh/70447517#70447517
