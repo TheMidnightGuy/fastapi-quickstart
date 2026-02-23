@@ -98,8 +98,14 @@ jobs:
       - name: Verificar contenedores Docker nuevamente
         run: docker ps -a
 
-      - name: Hostname
+      - name: Hostname (OCI - VCN)
         run: hostname -I
+
+      - name: ping
+        run: curl -I http://localhost:80/docs
+
+      - name: check docs page
+        run: http://localhost:80/docs
 
 
 #ref step "Instalar SSH Keys": https://stackoverflow.com/questions/60477061/github-actions-how-to-deploy-to-remote-server-using-ssh/70447517#70447517
