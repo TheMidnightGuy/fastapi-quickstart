@@ -105,7 +105,70 @@ jobs:
 
             cd .\.deploy\
 
-            
+            ls -a
+
+#Copiar docker-compose.yml y archivos .env a servidor linux (OCI)
+      - name: Crear carpeta .deploy en servidor linux
+        uses: appleboy/ssh-action@v1
+        with:
+         host: ${{secrets.SSH_HOST}}
+         username: ${{secrets.SSH_USERNAME}}
+         key: ${{secrets.SSH_PRIVATE_KEY}}
+         script: |
+          echo "---Comandos en OCI---"
+          ls -a
+          mkdir .deploy
+          cd .\.deploy\
+          ls -a
+
+      - name: Copiar archivos a servidor linux
+        uses: appleboy/scp-action@v1
+        with:
+         host: ${{secrets.SSH_HOST}}
+         username: ${{secrets.SSH_USER}}
+         key: ${{secrets.SSH_PRIVATE_KEY}}
+         source: ./docker-compose.yml
+         target: ~/.deploy/
+
+      - name: Chequeo posterior de archivos via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+         host: ${{secrets.SSH_HOST}}
+         username: ${{secrets.SSH_USERNAME}}
+         key: ${{secrets.SSH_PRIVATE_KEY}}
+         script: |
+          echo "---Comandos en OCI---"
+          echo "---Chequeando traspaso correcto de archivo docker compose---"
+          ls -a
+          cd .\.deploy\
+          ls -a
+
+      - name: Iniciar contenedor Docker desde docker compose
+        uses: appleboy/ssh-action@v1
+        with:
+         host: ${{secrets.SSH_HOST}}
+         username: ${{secrets.SSH_USERNAME}}
+         key: ${{secrets.SSH_PRIVATE_KEY}}
+         script: |
+          echo "---Levantando fastAPI desde docker compose"
+          docker images -a
+          docker ps -a
+
+          docker stop fastapi-app || true
+          docker rm fastapi-app || true
+
+          docker compose up -d
+
+          echo "Esperando que FastAPI inicie..."
+          sleep 10
+
+          curl -I http://127.0.0.1:80/docs         
+
+
+
+
+
+
 
 
 
