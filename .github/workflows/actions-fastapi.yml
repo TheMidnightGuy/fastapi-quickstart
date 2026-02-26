@@ -125,7 +125,7 @@ jobs:
         uses: appleboy/scp-action@v1
         with:
          host: ${{secrets.SSH_HOST}}
-         username: ${{secrets.SSH_USER}}
+         username: ${{secrets.SSH_USERNAME}}
          key: ${{secrets.SSH_PRIVATE_KEY}}
          source: ./docker-compose.yml
          target: ~/.deploy/
