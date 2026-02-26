@@ -115,7 +115,7 @@ jobs:
          host: ${{secrets.SSH_HOST}}
          username: ${{secrets.SSH_USERNAME}}
          key: ${{secrets.SSH_PRIVATE_KEY}}
-         source: ${{github.workspace}}/docker-compose.yml" #Fuente -> Mi repositorio de GitHub
+         source: "${{github.workspace}}/docker-compose.yml" #Fuente -> Mi repositorio de GitHub
          target: "~/.deploy"            #Destino-> carpeta .deploy dentro de servidor linux
 
       - name: Chequeo posterior de archivos via SSH
