@@ -108,19 +108,6 @@ jobs:
             ls -a
 
 #Copiar docker-compose.yml y archivos .env a servidor linux (OCI)
-      - name: Crear carpeta .deploy en servidor linux
-        uses: appleboy/ssh-action@v1
-        with:
-         host: ${{secrets.SSH_HOST}}
-         username: ${{secrets.SSH_USERNAME}}
-         key: ${{secrets.SSH_PRIVATE_KEY}}
-         script: |
-          echo "---Comandos en OCI---"
-          ls -a
-          mkdir .deploy
-          cd .\.deploy\
-          ls -a
-
       - name: Copiar archivos a servidor linux
         uses: appleboy/scp-action@v1
         with:
@@ -140,7 +127,7 @@ jobs:
           echo "---Comandos en OCI---"
           echo "---Chequeando traspaso correcto de archivo docker compose---"
           ls -a
-          cd .\.deploy\
+          cd ~/.deploy
           ls -a
 
       - name: Iniciar contenedor Docker desde docker compose
@@ -149,20 +136,34 @@ jobs:
          host: ${{secrets.SSH_HOST}}
          username: ${{secrets.SSH_USERNAME}}
          key: ${{secrets.SSH_PRIVATE_KEY}}
+         #¿Qué se hara en el script?
+         # Se listan imagenes y contenedores Docker
+         # Nos movemos al directorio en el cual se encuentra docker compose
+         # Se levanta el servicio de fastAPI desde el archivo docker compose
+         # Desglose docker compose -> 
+         # docker compose -f(desde archivo) up <servicio a levantar> -d(Ejecución en segundo plano)
+         # Se valida la ejecución del contenedor mediante 'curl' con url local
          script: |
-          echo "---Levantando fastAPI desde docker compose"
+          
           docker images -a
           docker ps -a
 
           docker stop fastapi-app || true
           docker rm fastapi-app || true
 
-          docker compose up -d
+          echo "---Directorio de archivo docker compose---"
+          cd ~/.deploy
+          ls -a
+
+          echo "---Levantando fastAPI desde docker compose"
+          docker compose -f ./docker_compose.yml up service_fastapi_app -d
 
           echo "Esperando que FastAPI inicie..."
           sleep 10
 
-          curl -I http://127.0.0.1:80/docs         
+          curl -I http://127.0.0.1:80/docs  
+          
+          docker ps -a
 
 
 
