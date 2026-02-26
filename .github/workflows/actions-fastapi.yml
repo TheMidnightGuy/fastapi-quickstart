@@ -92,6 +92,7 @@ jobs:
 
             docker stop fastapi-app || true
             docker rm fastapi-app || true
+            docker image prune
             docker run -d --name fastapi-app --restart always -p 80:8000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
 
             echo "Esperando que FastAPI inicie..."
@@ -114,8 +115,8 @@ jobs:
          host: ${{secrets.SSH_HOST}}
          username: ${{secrets.SSH_USERNAME}}
          key: ${{secrets.SSH_PRIVATE_KEY}}
-         source: 'docker-compose.yml'
-         target: ~/.deploy/
+         source: "./docker-compose.yml"
+         target: ~/.deploy
 
       - name: Chequeo posterior de archivos via SSH
         uses: appleboy/ssh-action@v1
