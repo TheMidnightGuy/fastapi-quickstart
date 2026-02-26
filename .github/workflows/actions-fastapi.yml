@@ -50,7 +50,7 @@ jobs:
             registry: ${{ env.REGISTRY}}
             username: ${{ github.actor}}
             password: ${{ secrets.GITHUB_TOKEN}}
-#Docker
+#Docker GHCR
     - name: Build image
       run: docker build -t ${{env.REGISTRY}}/${{env.IMAGE_NAME}}/my_fastapi_app .
 
@@ -79,6 +79,7 @@ jobs:
           # Se detiene y remueve el contendor (De existir)
           # Iniciamos un nuevo contenedor
           # Validamos que se ejecute correctamente con 'curl'
+          # Verificamos el directorio de carpetas actual
           script: |
             echo "Comandos en OCI"
             
@@ -97,3 +98,21 @@ jobs:
             sleep 10
 
             curl -I http://127.0.0.1:80/docs
+
+            ls -a
+
+#Copiar docker-compose.yml y archivos .env a servidor linux (OCI)
+      - name: Copiar archivos a servidor linux
+        uses: appleboy/scp-action@v1
+        with:
+         host: ${{secrets.SSH_HOST}}
+         username: ${{secrets.SSH_USER}}
+         key: ${{secrets.SSH_PRIVATE_KEY}}
+         source: ./docker-compose.yml
+         target: 
+         #¿Qué se hara dentro del script?
+
+         script: |
+
+
+ 
