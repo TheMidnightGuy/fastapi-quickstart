@@ -101,18 +101,13 @@ jobs:
 
             ls -a
 
-#Copiar docker-compose.yml y archivos .env a servidor linux (OCI)
-      - name: Copiar archivos a servidor linux
-        uses: appleboy/scp-action@v1
-        with:
-         host: ${{secrets.SSH_HOST}}
-         username: ${{secrets.SSH_USER}}
-         key: ${{secrets.SSH_PRIVATE_KEY}}
-         source: ./docker-compose.yml
-         target: 
-         #¿Qué se hara dentro del script?
+            mkdir .deploy
 
-         script: |
+            cd .\.deploy\
+
+            
+
+
 
 
  
