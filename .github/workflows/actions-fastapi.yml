@@ -116,7 +116,7 @@ jobs:
          username: ${{secrets.SSH_USERNAME}}
          key: ${{secrets.SSH_PRIVATE_KEY}}
          source: "./docker-compose.yml"
-         target: ~/.deploy
+         target: "~/.deploy"
 
       - name: Chequeo posterior de archivos via SSH
         uses: appleboy/ssh-action@v1
