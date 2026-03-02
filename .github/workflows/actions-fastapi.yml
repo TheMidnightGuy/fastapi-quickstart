@@ -107,7 +107,7 @@ jobs:
         uses: appleboy/ssh-action@v1
         with:
          host: ${{secrets.SSH_HOST}}
-         username: ${{secrets.SSH_USERNAME}}
+         username: ${{secrets.SSH_USER}}
          key: ${{secrets.SSH_PRIVATE_KEY}}
          #¿Qué se hara en el script?
          # Se listan imagenes y contenedores Docker
