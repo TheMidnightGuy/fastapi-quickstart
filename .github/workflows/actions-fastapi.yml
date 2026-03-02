@@ -73,7 +73,7 @@ jobs:
           key: ${{secrets.SSH_PRIVATE_KEY}}
           #¿Que se hara dentro del script?
           # Los comandos ejecutados dentro del script seran via ssh en orden secuencial.
-          # Se inicia sesión Docker en ghcr.io 
+          # Se inicia se*sión Docker en ghcr.io 
           # Se hace pull de la imagen
           # Verifica si existen imagenes o contenedores
           # Se detiene y remueve el contendor (De existir)
@@ -100,36 +100,8 @@ jobs:
 
             curl -I http://127.0.0.1:80/docs
 
-            ls -a
-
-            mkdir .deploy
-
-            cd .\.deploy\
-
-            ls -a
-
-#Copiar docker-compose.yml y archivos .env a servidor linux (OCI)
-      - name: Copiar archivos a servidor linux
-        uses: appleboy/scp-action@v1
-        with:
-         host: ${{secrets.SSH_HOST}}
-         username: ${{secrets.SSH_USERNAME}}
-         key: ${{secrets.SSH_PRIVATE_KEY}}
-         source: "${{github.workspace}}/docker-compose.yml" #Fuente -> Mi repositorio de GitHub
-         target: "~/.deploy"            #Destino-> carpeta .deploy dentro de servidor linux
-
-      - name: Chequeo posterior de archivos via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-         host: ${{secrets.SSH_HOST}}
-         username: ${{secrets.SSH_USERNAME}}
-         key: ${{secrets.SSH_PRIVATE_KEY}}
-         script: |
-          echo "---Comandos en OCI---"
-          echo "---Chequeando traspaso correcto de archivo docker compose---"
-          ls -a
-          cd ~/.deploy
-          ls -a
+            echo "---Listando contenedores Docker---"
+            docker ps -a
 
       - name: Iniciar contenedor Docker desde docker compose
         uses: appleboy/ssh-action@v1
@@ -145,14 +117,15 @@ jobs:
          # docker compose -f(desde archivo) up <servicio a levantar> -d(Ejecución en segundo plano)
          # Se valida la ejecución del contenedor mediante 'curl' con url local
          script: |
-          
+          echo "---Listando imagenes y contenedores Docker---"
           docker images -a
           docker ps -a
 
+          echo "---Detenemos y borramos fastapi-app---"
           docker stop fastapi-app || true
           docker rm fastapi-app || true
 
-          echo "---Directorio de archivo docker compose---"
+          echo "---Directorio .deploy---"
           cd ~/.deploy
           ls -a
 
