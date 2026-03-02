@@ -84,12 +84,6 @@ jobs:
           
           echo "---Hacemos pull para obtener ultima version de imagen---"
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
-
-          echo "---Listando imagenes Docker---"
-          docker images -a
-          
-          echo "---Removemos imagenes 'untagged'---"
-          docker image prune -f
           
           echo "---Listando contenedores Docker---"
           docker ps -a
@@ -106,13 +100,16 @@ jobs:
           docker compose -f docker-compose.yml up service_fastapi_app -d
 
           echo "Esperando que FastAPI inicie..."
-          sleep 10
-          
-          echo "---Listando imagenes Docker---"
-          docker images -a
+          sleep 5
 
           echo "---Listando contenedores Docker---"
           docker ps -a
+
+          echo "---Removemos imagenes 'untagged'---"
+          docker image prune -f
+
+          echo "---Verificamos borrado de imagenes 'untagged'---"
+          docker images -a
 
 
 
