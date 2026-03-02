@@ -92,7 +92,10 @@ jobs:
 
             docker stop fastapi-app || true
             docker rm fastapi-app || true
+
+            echo "---Removemos imagenes 'untagged'---"
             docker image prune
+            y
             docker run -d --name fastapi-app --restart always -p 80:8000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/my_fastapi_app:latest
 
             echo "Esperando que FastAPI inicie..."
@@ -117,8 +120,9 @@ jobs:
          # docker compose -f(desde archivo) up <servicio a levantar> -d(Ejecución en segundo plano)
          # Se valida la ejecución del contenedor mediante 'curl' con url local
          script: |
-          echo "---Listando imagenes y contenedores Docker---"
+          echo "---Listando imagenes Docker---"
           docker images -a
+          echo "---Listando contenedores Docker---"
           docker ps -a
 
           echo "---Detenemos y borramos fastapi-app---"
@@ -130,13 +134,17 @@ jobs:
           ls -a
 
           echo "---Levantando fastAPI desde docker compose"
-          docker compose -f ./docker_compose.yml up service_fastapi_app -d
+          docker compose -f docker-compose.yml up service_fastapi_app -d
 
           echo "Esperando que FastAPI inicie..."
           sleep 10
 
           curl -I http://127.0.0.1:80/docs  
           
+          echo "---Listando imagenes Docker---"
+          docker images -a
+
+          echo "---Listando contenedores Docker---"
           docker ps -a
 
 
