@@ -74,7 +74,7 @@ jobs:
          # Se inicia sesión en docker
          # Obtenemos de imagen docker
          # Listamos imagenes y removemos los residuos
-         # Detenemos y borramos el servicio que se ejecutaba anteriormente
+         # Detenemos y borramos el servicio que se ejecutaba anteriormente (docker image prune + flag '-f' para forzar el borrado)
          # Se levanta el servicio de fastAPI desde el archivo docker compose (desde /.deploy)
          # Desglose docker compose -> docker compose -f(desde archivo) up <servicio a levantar> -d(Ejecución en segundo plano)
          # Se valida la ejecución del contenedor listado de contenedores Docker
@@ -89,8 +89,7 @@ jobs:
           docker images -a
           
           echo "---Removemos imagenes 'untagged'---"
-          docker image prune
-          y
+          docker image prune -f
           
           echo "---Listando contenedores Docker---"
           docker ps -a
