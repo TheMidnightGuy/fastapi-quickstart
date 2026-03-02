@@ -8,30 +8,20 @@ services:
     image: 'ghcr.io/themidnightguy/fastapi-quickstart/my_fastapi_app:latest'
     restart:  always
     ports:
-      -  "8000:8000"
+      -  "80:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
     environment:
       - REGISTRY=ghcr.io
       - IMAGE_NAME=themidnightguy/fastapi-quickstart
-
-    networks:
-      - red_aislada
-
+      - PYTHONUNBUFFERED=1
 
 secrets:
   ssh-private-key:
-    file: ~/.ssh/oci/ssh-key-2026-02-18
+    file: ~/.ssh/oci/ssh-key-2026-02-18.key
 
   ssh-host:
     file: ~/.secrets/oci/ssh_host.txt
 
   ssh_username:
     file: ~/.secrets/oci/ssh_username.txt
-
-networks:
-  red_aislada:
-    driver: bridge
-
-#Se genera dentro de la instancia remota al realizar un `docker compose up`
-volumes:
-  volumen_local:
