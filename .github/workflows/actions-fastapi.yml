@@ -92,8 +92,8 @@ jobs:
           docker stop deploy-service_fastapi_app-1 || true
           docker rm deploy-service_fastapi_app-1 || true
 
-          echo "---Directorio .deploy---"
-          cd ~/.deploy
+          echo "---Directorio .deploy/fastapi_quickstart---"
+          cd ~/.deploy/fastapi-quickstart
           ls -a
 
           echo "---Levantando fastAPI desde docker compose"
