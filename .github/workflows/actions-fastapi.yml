@@ -89,8 +89,8 @@ jobs:
           docker ps -a
 
           echo "---Detenemos y borramos fastapi-app---"
-          docker stop deploy-service_fastapi_app-1 || true
-          docker rm deploy-service_fastapi_app-1 || true
+          docker stop fastapi-quickstart-service_fastapi_app-1 || true
+          docker rm fastapi-quickstart-service_fastapi_app-1 || true
 
           echo "---Directorio .deploy/fastapi_quickstart---"
           cd ~/.deploy/fastapi-quickstart
